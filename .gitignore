@@ -1,0 +1,15 @@
+# ignore text editor tmp files
+*~
+
+# ignore archive files
+*.a
+
+# ignore object files
+*.o
+
+# ignore files in the build/ directory
+build/
+
+# ignore files in the temp/ directory
+temp/
+
