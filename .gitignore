@@ -13,3 +13,5 @@ build/
 # ignore files in the temp/ directory
 temp/
 
+# ignore files in the bin/ directory
+bin/
