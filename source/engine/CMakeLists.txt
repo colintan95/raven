@@ -1,0 +1,12 @@
+add_subdirectory(audio)
+add_subdirectory(base)
+add_subdirectory(container)
+add_subdirectory(entity)
+add_subdirectory(gui)
+add_subdirectory(math)
+add_subdirectory(physics)
+add_subdirectory(platform)
+add_subdirectory(render)
+add_subdirectory(scripting)
+
+add_sources()
