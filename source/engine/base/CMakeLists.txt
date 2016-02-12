@@ -1,1 +1,4 @@
-add_sources()
+add_sources(
+
+	base_log.cpp
+)
