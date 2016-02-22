@@ -1,0 +1,1 @@
+add_sources(MurmurHash2.cpp)

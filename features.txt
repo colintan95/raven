@@ -1,0 +1,80 @@
+Engine Features (Can be ported to other games)
+
+- Renderer
+- File System
+- Input
+- Audio
+- Scripting
+- Entity
+- Physics
+- GUI
+- Random Number Generator
+- Threads
+- State Machine
+- Asynchronous IO
+- Graphics Shaders
+- Allocators
+- Memory Management
+- Data Structures
+- Save Files
+- Config Files
+- AI
+- Pathfinding
+- Resources
+- Console
+- Debugging
+- Error Handling
+- XML/JSON
+- Sprite Layering
+- String Handling
+- Image
+- 2D Lighting
+- Entity Hierarchy
+- Behavior
+- Networking
+- Timer
+- Entity Querying
+- Active Entities
+- Event Management
+- Entity Communication
+- Input Controller
+- Camera
+- Animations
+- Goals & Decision Making
+- Profiling
+- Fonts
+- Textures
+- String Localization
+- Logging
+- Options
+- World Loading
+- Entity Spawning
+- Entity Updating
+- Multithreaded
+- Cheats
+- Vectors
+- Matrices
+- Time Management
+- Networked Game Loop
+
+
+Raven Features
+- Map Generation
+- Loading Screen
+- Save Files
+- Inventory Management
+- NPCs
+- Weapons
+- Background
+- Props
+- Base
+- Interactive
+- Quests
+- Resources
+- Player Abilities
+- Multiplayer
+- Key Mapping
+- Quests
+- Objectives
+- Dialogue / Interactions
+- Custom Event Creation
