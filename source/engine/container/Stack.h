@@ -1,21 +1,15 @@
 #ifndef STACK_H_
 #define STACK_H_
 
-//--------------------------------------------------
-//
-// Stack.h
-//
-// Defines the Stack container
-//
-//--------------------------------------------------
-
 #include "base_include.h"
 
+//--------------------------------------------------
 //
 // Stack
 //
 // A LIFO container
 //
+//--------------------------------------------------
 template<typename T>
 class Stack {
 

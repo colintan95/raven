@@ -49,12 +49,16 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	add_definitions(-DEXT_PLATFORM_LINUX)
-	set(PLATFROM_LINUX TRUE)
+	set(PLATFORM_LINUX TRUE)
 
 else()
 	message(FATAL_ERROR "Unsupported operating system, CMake will exit.")
 
 endif()
+
+
+# use OpenGL as graphics framework
+add_definitions(-DEXT_PLATFORM_OPENGL)
 
 
 # set build type
@@ -119,6 +123,16 @@ endif()
 set(RAVEN_LIB_INCLUDE ${RAVEN_LIB_INCLUDE} ${SDL2_INCLUDE_DIRS})
 set(RAVEN_LIB_LIBRARIES ${RAVEN_LIB_LIBRARIES} "-L${SDL2_LIBRARY_DIRS} -lSDL2")
 
+# find OpenGL
+find_package(OpenGL)
+
+if (NOT OPENGL_FOUND)
+	message(FATAL_ERROR "OpenGL not found, CMake will exit.")
+endif()
+
+set(RAVEN_LIB_INCLUDE ${RAVEN_LIB_INCLUDE} ${OPENGL_INCLUDE_DIRS})
+set(RAVEN_LIB_LIBRARIES ${RAVEN_LIB_LIBRARIES} ${OPENGL_LIBRARIES})
+
 # find googletest
 find_package(GTEST)
 
@@ -148,6 +162,7 @@ include_directories(${RAVEN_LIB_INCLUDE})
 # define include directories
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/source/engine/base
+	${CMAKE_CURRENT_SOURCE_DIR}/source/engine/platform
 	${CMAKE_CURRENT_SOURCE_DIR}/source/engine
 	${CMAKE_CURRENT_SOURCE_DIR}/source/raven
 	${CMAKE_CURRENT_SOURCE_DIR}/source

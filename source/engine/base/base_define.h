@@ -3,14 +3,11 @@
 
 //--------------------------------------------------
 //
-// base_define.h
-//
 // Define macros
 //
 // Macros of type EXT_* are defined from CMake
 //
 //--------------------------------------------------
-
 
 // Define if debug mode
 
@@ -21,7 +18,7 @@
 #endif
 
 
-// etermines the operating system
+// determines the operating system
 
 #undef _PLATFORM_WIN
 #undef _PLATFORM_OSX
@@ -33,6 +30,17 @@
 	#define _PLATFORM_OSX
 #elif defined(EXT_PLATFORM_LINUX)
 	#define _PLATFORM_LINUX
+#else
+	ASSERT(0);
+#endif
+
+
+// determines the graphics framework for rendering
+
+#if defined(EXT_PLATFORM_OPENGL)
+	#define _PLATFORM_OPENGL
+#else
+	ASSERT(0);
 #endif
 
 

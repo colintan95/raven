@@ -1,19 +1,14 @@
-#include <iostream>
-#include <cstdlib>
-
-#include "base_include.h"
-
-#include "container/Stack.h"
-
-using namespace std;
+#include "GameEngine.h"
 
 int main(int argc, char* argv[]) {
 
-	Stack<int> stack(10);
+	GameEngine* engine = new GameEngine();
 
-    stack.Push(20);
+	engine->Init();
 
-	cout << stack.GetFront() << endl;
+	engine->MainLoop();
+
+	engine->Shutdown();
 	
 	return 0;
 }

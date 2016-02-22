@@ -1,1 +1,5 @@
-add_sources()
+add_sources(
+
+	Entity.cpp
+	SpriteClip.cpp
+)

@@ -5,7 +5,7 @@ TEST_F(StackTest, MaxLoad) {
 
 	int cap = stack.GetCapacity();
 
-	StackStruct ptrArr[cap];
+    StackStruct* ptrArr = new StackStruct[cap];
 
 	for (int i = 0; i < cap; ++i) {
 		ptrArr[i].x = ptrArr[i].y = ptrArr[i].z = ptrArr[i].w = i;
@@ -31,6 +31,8 @@ TEST_F(StackTest, MaxLoad) {
 		EXPECT_EQ(ptrArr[i], res);
 		stack.Pop();
 	}
+    
+    delete[] ptrArr;
 }
 
 TEST_F(StackTest, PushPop) {
@@ -51,7 +53,7 @@ TEST_F(StackTest, PushPop) {
 TEST_F(StackTest, Clear) {
 	int cap = stack.GetCapacity();
 
-	StackStruct ptrArr[cap];
+    StackStruct* ptrArr = new StackStruct[cap];
 
 	for (int i = 0; i < cap; ++i) {
 		ptrArr[i].x = ptrArr[i].y = ptrArr[i].z = ptrArr[i].w = i;
@@ -71,4 +73,6 @@ TEST_F(StackTest, Clear) {
 		EXPECT_EQ(ptrArr[i], res);
 		stack.Pop();
 	}
+    
+    delete[] ptrArr;
 }

@@ -1,21 +1,15 @@
 #ifndef QUEUE_H_
 #define QUEUE_H_
 
-//--------------------------------------------------
-//
-// Queue.h
-//
-// Defines the Queue container
-//
-//--------------------------------------------------
-
 #include "base_include.h"
 
+//--------------------------------------------------
 //
 // Queue
 //
 // A FIFO container that supports queuing in one direction
 //
+//--------------------------------------------------
 template<typename T>
 class Queue {
 
@@ -63,7 +57,7 @@ public:
 		return m_Data[m_Head]; 
 	}
 
-	const T& GetFront() {
+	const T& GetFront() const {
 		return const_cast<T&>(GetFront());
 	}
 
