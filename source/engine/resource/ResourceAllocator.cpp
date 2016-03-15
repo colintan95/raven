@@ -12,3 +12,9 @@ m_PermAlloc(kResourceAllocPermMax) {
 ResourceAllocator::~ResourceAllocator() {
 	m_ManagerPtr = nullptr;
 }
+
+byte_t* ResourceAllocator::Allocate(size_t size, ResourceUsage_t usage) {
+	if (usage == kResourceSingleUse) {
+		
+	}
+}

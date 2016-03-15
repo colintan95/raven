@@ -9,6 +9,7 @@
 class InputManager;
 class Renderer;
 class ResourceManager;
+class Scene;
 
 //--------------------------------------------------
 //
@@ -43,6 +44,8 @@ private:
 	ResourceManager* m_Resource;
 	InputManager* m_Input;
 	Renderer* m_Render;
+
+	Scene* m_Scene;
 
 	// Shutdown engine if true
 	bool m_Quit;

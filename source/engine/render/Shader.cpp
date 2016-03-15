@@ -200,9 +200,9 @@ void Shader::SetUniformMat3f(ShaderUniform_t uniform, const Mat3& mat) {
 	glUniformMatrix3fv(loc, 1, GL_FALSE, m_TmpValBuf);
 }
 
-void Shader::SetUniformTexture2D(ShaderUniform_t uniform, const Texture2D& tex) {
+void Shader::SetUniformTexture(ShaderUniform_t uniform, const Texture& tex) {
 	GLint loc = GetUniformLocation(uniform);
-	glUniform1i(loc, tex.m_TextureId);
+	glUniform1i(loc, tex.m_TextureUnit);
 }
 
 GLint Shader::GetUniformLocation(ShaderUniform_t uniform) {

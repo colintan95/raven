@@ -45,6 +45,9 @@ private:
 	// Allocator for single use resources
 	FrameAllocator m_SingleUseAlloc;
 
+	// (TODO:) Allocator for contextual resources
+	
+
 	// Allocator for permanent resources
 	FrameAllocator m_PermAlloc;
 };

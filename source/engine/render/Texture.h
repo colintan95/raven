@@ -22,23 +22,27 @@ enum TextureColor_t {
 
 //--------------------------------------------------
 //
-// Texture2D
+// Texture
 //
 // 2D texture used in rendering
 //
 //--------------------------------------------------
-class Texture2D {
+class Texture {
 	friend class Shader;
 
 public:
-	Texture2D();
-	~Texture2D();
+	Texture();
+	~Texture();
 
 	// Creates the 2D texture from a buffer
 	void CreateFromBuffer(TextureColor_t colorType, int width, int height, const void* data);
 
+	int GetWidth() const { return m_Width; }
+	int GetHeight() const { return m_Height; }
+
 private:
 	GLuint m_TextureId;
+	GLuint m_TextureUnit;
 
 	TextureColor_t m_ColorType;
 

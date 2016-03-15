@@ -10,6 +10,11 @@ Entity::Entity() {
 	m_Parent = nullptr;
 	m_Children = nullptr;
 	m_Sibling = nullptr;
+
+	m_Position = Vec2(0.0, 0.0);
+	m_Rotation = 0.0;
+
+	UpdateAllTransform();
 }
 
 Entity::~Entity() {

@@ -49,6 +49,9 @@ void InputManager::Update() {
 		if (evt.type == kInputQuit) {
 			m_EnginePtr->QuitGame();
 		}
+		else if (evt.type == kInputMouseDown) {
+			LOG_PRINT("%i %i", evt.mouse.x, evt.mouse.y);
+		}
 
 		// Terminates the loop if the input queue is full
 		if (m_InputQueue.IsFull()) {

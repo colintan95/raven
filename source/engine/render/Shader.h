@@ -47,7 +47,7 @@ const char* const kShaderAttribTexcoordName = "v_Texcoord";
 const char* const kShaderAttribColorName = "v_Color";
 
 // Dimensions of the vector for each attribute
-const int kShaderAttribPositionVecDim = 3;
+const int kShaderAttribPositionVecDim = 2;
 const int kShaderAttribTexcoordVecDim = 2;
 const int kShaderAttribColorVecDim = 4;
 
@@ -105,7 +105,7 @@ public:
 	void SetUniformMat2f(ShaderUniform_t uniform, const Mat2& mat);
 	void SetUniformMat3f(ShaderUniform_t uniform, const Mat3& mat);
 
-	void SetUniformTexture2D(ShaderUniform_t uniform, const Texture2D& tex);
+	void SetUniformTexture(ShaderUniform_t uniform, const Texture& tex);
 
 protected:
 	// Gets the location of the uniform with

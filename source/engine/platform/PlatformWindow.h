@@ -27,6 +27,9 @@ const int kOpenGLVersionMinor = 1;
 
 #endif
 
+// Forward declarations
+class PlatformInput;
+
 //--------------------------------------------------
 //
 // PlatformWindow
@@ -35,6 +38,7 @@ const int kOpenGLVersionMinor = 1;
 //
 //--------------------------------------------------
 class PlatformWindow {
+	friend class PlatformInput;
 
 public:
 	PlatformWindow();
@@ -53,6 +57,9 @@ public:
 	int GetWindowHeight() const { return m_WindowHeight; }
 
 	bool GetFullscreen() const { return m_Fullscreen; }
+
+private:
+	void ResizeGLViewport();
 
 private:
 	SDL_Window *m_Window;

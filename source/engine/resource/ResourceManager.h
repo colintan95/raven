@@ -17,6 +17,12 @@ class PlatformFileSystem;
 class ResourceAllocator;
 class ResourceStream;
 
+// Resource load request
+struct ResourceLoadReq {
+	const char* path;
+	ResourceUsage_t usage;
+};
+
 //--------------------------------------------------
 //
 // ResourceManager
@@ -33,9 +39,7 @@ public:
 	// Called on each frame
 	void Update();
 
-	void RequestResourceFromFile(const char* path, ResourceUsage_t usage);
-
-	void LoadResourceFromFile(const char* path);
+	void LoadResourceFromFile(const char* path, ResourceUsage_t usage);
 
 	ResourceHandle GetResource(const char* name);
 	ResourceHandle GetResource(ResourceId_t id);
@@ -56,7 +60,7 @@ private:
 	// Contains all resources, indexed by resource id
 	HashMap<ResourceId_t, Resource> m_Registry;
 
-	Stack<const char*> m_ReqStack;
+	Stack<ResourceLoadReq> m_ReqStack;
 };
 
 #endif

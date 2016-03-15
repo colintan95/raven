@@ -5,13 +5,13 @@
 
 const char* const kShaderScreenTexturedVS = STRINGIFY(
 
-in vec3 v_Position;
-in vec2 v_Texcoord;
+attribute vec2 v_Position;
+attribute vec2 v_Texcoord;
 
 varying vec2 vf_Texcoord;
 
 void main() {
-	gl_Position = v_Position;
+	gl_Position = vec4(v_Position, 0.0, 1.0);
 
 	vf_Texcoord = v_Texcoord;
 }
@@ -25,7 +25,7 @@ varying vec2 vf_Texcoord;
 uniform sampler2D u_Texture2D;
 
 void main() {
-	gl_FragColor = texture(u_Texture2D, vf_Texcoord);
+	gl_FragColor = texture2D(u_Texture2D, vf_Texcoord);
 }
 
 );

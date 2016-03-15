@@ -1,5 +1,11 @@
 #include "PlatformWindow.h"
 
+#if defined(_PLATFORM_OSX)
+#include <OpenGL/gl.h>
+#else 
+#include <GL/gl.h>
+#endif
+
 PlatformWindow::PlatformWindow() {	
     m_WindowWidth = 0;
     m_WindowHeight = 0;
@@ -11,7 +17,10 @@ PlatformWindow::PlatformWindow() {
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     
-    m_Window = SDL_CreateWindow(kWindowTitle, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, kWindowDefaultWidth, kWindowDefaultHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+    m_Window = SDL_CreateWindow(kWindowTitle, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, kWindowDefaultWidth, kWindowDefaultHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+
+    m_WindowWidth = kWindowDefaultWidth;
+    m_WindowHeight = kWindowDefaultHeight;
     
     if (m_Window == NULL) {
     	LOG_FATAL_ERROR("SDL Window could not be created. SDL Error: %s\n", SDL_GetError());
@@ -24,6 +33,8 @@ PlatformWindow::PlatformWindow() {
     if (m_GLContext == NULL) {
     	LOG_FATAL_ERROR("SDL OpenGL Context could not be created. SDl Error: %s\n", SDL_GetError());
     }
+
+    ResizeGLViewport();
 
     // Synchronizes updates with vertical retrace
     SDL_GL_SetSwapInterval(1);
@@ -51,6 +62,8 @@ void PlatformWindow::ResizeWindow(int width, int height) {
 
     m_WindowWidth = width;
     m_WindowHeight = height;
+
+    ResizeGLViewport();
 }
 
 void PlatformWindow::SetFramesPerSecond(int fps) {
@@ -68,4 +81,8 @@ void PlatformWindow::SetFullscreen(bool flag) {
 
         m_Fullscreen = false;
     }
+}
+
+void PlatformWindow::ResizeGLViewport() {
+    glViewport(0, 0, m_WindowWidth, m_WindowHeight);
 }

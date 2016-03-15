@@ -5,5 +5,4 @@ add_sources(
 	QuadShader.cpp
 	RenderQuad.cpp
 	Texture.cpp
-	Image.cpp
 )

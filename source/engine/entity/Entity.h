@@ -9,6 +9,23 @@
 
 typedef uint64_t EntityId_t;
 
+
+#define CONCRETE_PROTOTYPE(classname)	\
+public:	\
+	static Entity* CreateInstance();
+
+
+#define CONCRETE_DECLARATION(classname)	\
+Entity* className::CreateInstance() {	\
+	classname* ptr = new classname;	\
+	return ptr;	\
+}
+
+
+// Forward declarations
+class Scene;
+class Sprite;
+
 //--------------------------------------------------
 //
 // Entity
@@ -17,6 +34,7 @@ typedef uint64_t EntityId_t;
 //
 //--------------------------------------------------
 class Entity {
+	friend class Scene;
 
 public:
 	Entity();
@@ -34,9 +52,19 @@ public:
 
 	void AddChild(Entity* entity);
 	void RemoveChild(Entity* entity);
+
+
+	void SetSprite(SharedPtr<Sprite> sprite) {
+		m_Sprite = sprite;
+	}
 	
 
 	EntityId_t GetId() const { return m_Id; }
+	Sprite* GetSprite() { return m_Sprite.get(); }
+
+	Mat3 GetWorldTransform() const { return m_WorldTransform; }
+
+	bool HasSprite() const { return m_Sprite.get() != nullptr; }
 
 private:
 	// Call if any transform has been modified
@@ -75,6 +103,10 @@ protected:
 	// Will be re-calculated if the local transform changes, or the parent's
 	// world transform is changed
 	Mat3 m_WorldTransform;
+
+
+	// Pointer to sprite if present
+	SharedPtr<Sprite> m_Sprite;
 
 
 	// Position and rotation relative to parent

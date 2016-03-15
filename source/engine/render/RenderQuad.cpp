@@ -12,26 +12,22 @@ RenderQuad::~RenderQuad() {
 
 }
 
-void RenderQuad::SetPosition(const Vec3& topLeft, const Vec3& topRight, const Vec3& bottomRight, const Vec3& bottomLeft) {
+void RenderQuad::SetPosition(const Vec2& topLeft, const Vec2& topRight, const Vec2& bottomRight, const Vec2& bottomLeft) {
 	ClearPositionData();
 
 	m_PositionData[0] = topLeft.GetX();
 	m_PositionData[1] = topLeft.GetY();
-	m_PositionData[2] = topLeft.GetZ();
-	m_PositionData[3] = topRight.GetX();
-	m_PositionData[4] = topRight.GetY();
-	m_PositionData[5] = topRight.GetZ();
-	m_PositionData[6] = bottomRight.GetX();
-	m_PositionData[7] = bottomRight.GetY();
-	m_PositionData[8] = bottomRight.GetZ();
-	m_PositionData[9] = bottomLeft.GetX();
-	m_PositionData[10] = bottomLeft.GetY();
-	m_PositionData[11] = bottomLeft.GetZ();
+	m_PositionData[2] = topRight.GetX();
+	m_PositionData[3] = topRight.GetY();
+	m_PositionData[4] = bottomRight.GetX();
+	m_PositionData[5] = bottomRight.GetY();
+	m_PositionData[6] = bottomLeft.GetX();
+	m_PositionData[7] = bottomLeft.GetY();
 
 	m_UsePosition = true;
 }
 
-void RenderQuad::SetTexcoord(const Vec3& topLeft, const Vec3& topRight, const Vec3& bottomRight, const Vec3& bottomLeft) {
+void RenderQuad::SetTexcoord(const Vec2& topLeft, const Vec2& topRight, const Vec2& bottomRight, const Vec2& bottomLeft) {
 	ClearTexcoordData();
 
 	m_TexcoordData[0] = topLeft.GetX();
@@ -70,7 +66,7 @@ void RenderQuad::SetColor(const Vec4& topLeft, const Vec4& topRight, const Vec4&
 }
 
 void RenderQuad::ClearPositionData() {
-	memset((void*)m_PositionData, 0, 12 * sizeof(float));
+	memset((void*)m_PositionData, 0, 8 * sizeof(float));
 	m_UsePosition = false;
 }
 

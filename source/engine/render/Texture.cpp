@@ -1,7 +1,8 @@
 #include "Texture.h"
 
-Texture2D::Texture2D() {
+Texture::Texture() {
 	m_TextureId = 0;
+	m_TextureUnit = 0;
 
 	m_ColorType = kTextureColorNull;
 
@@ -9,16 +10,20 @@ Texture2D::Texture2D() {
 	m_Height = 0;
 }
 
-Texture2D::~Texture2D() {
+Texture::~Texture() {
 	glDeleteTextures(1, &m_TextureId);
 }
 
-void Texture2D::CreateFromBuffer(TextureColor_t colorType, int width, int height, const void* data) {
+void Texture::CreateFromBuffer(TextureColor_t colorType, int width, int height, const void* data) {
 	ASSERT(width > 0 && height > 0);
 
 	glGenTextures(1, &m_TextureId);
 
 	glBindTexture(GL_TEXTURE_2D, m_TextureId);
+
+	// (TODO:) Allow texture units to vary
+	glActiveTexture(GL_TEXTURE0 + 1);
+	m_TextureUnit = 1;
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

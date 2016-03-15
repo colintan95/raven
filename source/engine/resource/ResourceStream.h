@@ -50,6 +50,8 @@ struct ResourceBuffer {
 	ResourceBufferStatus_t status;
 	size_t size; // size of data in the buffer
 	bool error; // True if an error occurred
+
+	ResourceUsage_t usage; // For use after loading
 };
 
 
@@ -70,7 +72,7 @@ public:
 	// Default constructor creates buffer with a null state
 	ResourceBufferHandle();
 
-	ResourceBufferHandle(ResourceStream* stream, byte_t* buffer, size_t size, bool error);
+	ResourceBufferHandle(ResourceStream* stream, byte_t* buffer, size_t size, bool error, ResourceUsage_t usage);
 
 	~ResourceBufferHandle();
 
@@ -91,6 +93,9 @@ private:
 
 	// Size of data in the buffer
 	size_t m_Size;
+
+	// Determines how the data will be stored after loading
+	ResourceUsage_t m_Usage;
 };
 
 
@@ -119,7 +124,7 @@ public:
 
 
 	// Uses asynchronous io
-	bool LoadDataFromFile(const char* name);
+	bool LoadDataFromFile(const char* path, ResourceUsage_t usage);
 
 
 	// Returns a handle to the result of the most recent io operation

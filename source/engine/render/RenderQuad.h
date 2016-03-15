@@ -27,9 +27,9 @@ public:
 	RenderQuad();
 	~RenderQuad();
 
-	void SetPosition(const Vec3& topLeft, const Vec3& topRight, const Vec3& bottomRight, const Vec3& bottomLeft);
+	void SetPosition(const Vec2& topLeft, const Vec2& topRight, const Vec2& bottomRight, const Vec2& bottomLeft);
 
-	void SetTexcoord(const Vec3& topLeft, const Vec3& topRight, const Vec3& bottomRight, const Vec3& bottomLeft);
+	void SetTexcoord(const Vec2& topLeft, const Vec2& topRight, const Vec2& bottomRight, const Vec2& bottomLeft);
 
 	void SetColor(const Vec4& topLeft, const Vec4& topRight, const Vec4& bottomRight, const Vec4& bottomLeft);
 
@@ -40,7 +40,7 @@ private:
 
 private:
 	// Vertex attribute data
-	float m_PositionData[12];
+	float m_PositionData[8];
 	float m_TexcoordData[8];
 	float m_ColorData[16];
 

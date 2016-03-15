@@ -10,6 +10,9 @@
 const int kKeyStateMax = 255;
 const int kKeyCodeSDLMax = 128;
 
+// Forward declarations
+class PlatformWindow;
+
 //--------------------------------------------------
 //
 // PlatformInput
@@ -20,7 +23,7 @@ const int kKeyCodeSDLMax = 128;
 class PlatformInput {
 
 public:
-	PlatformInput();
+	PlatformInput(PlatformWindow* window);
 	~PlatformInput();
 
 	// Retrieves the next input in the system and places the data in evt
@@ -38,6 +41,8 @@ private:
 	void InitConvertTable();
 
 private:
+	PlatformWindow* m_WindowPtr;
+
 	// Tracks the state of all keys
 	bool m_KeyStates[kKeyStateMax];
 	KeyCode_t m_ConvertTable[kKeyCodeSDLMax]; // Converts SDL_KeyCode (until 128) to KeyCode_t

@@ -2,12 +2,16 @@
 
 #include <cstring>
 
-PlatformInput::PlatformInput() {
+#include "PlatformWindow.h"
+
+PlatformInput::PlatformInput(PlatformWindow* window) {
+	m_WindowPtr = window;
+
     InitConvertTable();
 }
 	
 PlatformInput::~PlatformInput() {
-
+	m_WindowPtr = nullptr;
 }
 
 bool PlatformInput::RetrieveInput(InputEvent* evt) {
@@ -108,6 +112,14 @@ bool PlatformInput::RetrieveInput(InputEvent* evt) {
 
 				evt->type = kInputKeyUp;
 			}
+        }
+        else if (sdlEvent.type == SDL_WINDOWEVENT) {
+        	if (sdlEvent.window.event == SDL_WINDOWEVENT_RESIZED) {
+        		m_WindowPtr->m_WindowWidth = sdlEvent.window.data1;
+        		m_WindowPtr->m_WindowHeight = sdlEvent.window.data2;
+
+        		m_WindowPtr->ResizeGLViewport();
+        	}
         }
 	}
 	else {

@@ -1,5 +1,6 @@
 add_sources(
 
 	Entity.cpp
-	SpriteClip.cpp
+	Sprite.cpp
+	Scene.cpp
 )

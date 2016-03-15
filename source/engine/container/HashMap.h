@@ -210,6 +210,14 @@ public:
 		return it;
 	}
 
+	bool IsFull() const {
+		return m_EntryCount == m_Capacity;
+	}
+
+	bool IsEmpty() const {
+		return m_EntryCount < m_Capacity;
+	}
+
 public:
 	int GetSize() const {
 		return m_EntryCount;

@@ -33,26 +33,40 @@ void ResourceManager::Update() {
 
     // Send the next request to load
     if (m_Stream->CanLoad() && !m_ReqStack.IsEmpty()) {
-    	const char* path = m_ReqStack.GetFront();
-		bool res = m_Stream->LoadDataFromFile(path);
-		if (!res) {
-			LOG_ERROR("ResourceManager: File \'%s\' could not be found", path);
-		}
+    	ResourceLoadReq req = m_ReqStack.GetFront();
+
+    	ResourceHandle handle = GetResource(req.path);
+
+    	// Checks if the file has already been loaded into the manager
+    	if (!handle.IsValid()) {
+    		bool res = m_Stream->LoadDataFromFile(req.path, req.usage);
+			if (!res) {
+				LOG_ERROR("ResourceManager: File \'%s\' could not be found", req.path);
+			}
+    	}
+    	else {
+    		LOG_ERROR("ResourceManager: File \'%s\' is already loaded", req.path);
+    	}
+
 		m_ReqStack.Pop();
 	}
     	
     // Handle the current request if it has finished loading
     if (m_Stream->IsComplete()) {
-        ResourceBufferHandle handle = m_Stream->AcquireBufferHandle();
+        ResourceBufferHandle bufHandle = m_Stream->AcquireBufferHandle();
 
-        //LOG_PRINT("Memory: %llu\nSize: %llu\nError: %i", (size_t)handle.GetData(), handle.GetSize(), handle.IsError());
+        LOG_PRINT("Memory: %llu\nSize: %llu\nError: %i", (size_t)bufHandle.GetData(), bufHandle.GetSize(), bufHandle.IsError());
         
-        m_Stream->ReleaseBufferHandle(handle);
+        m_Stream->ReleaseBufferHandle(bufHandle);
     }
 }
 
-void ResourceManager::LoadResourceFromFile(const char* path) {
-	m_ReqStack.Push(path);
+void ResourceManager::LoadResourceFromFile(const char* path, ResourceUsage_t usage) {
+	ResourceLoadReq req;
+	req.path = path;
+	req.usage = usage;
+
+	m_ReqStack.Push(req);
 }
 
 ResourceHandle ResourceManager::GetResource(const char* name) {

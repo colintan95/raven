@@ -14,9 +14,10 @@ ResourceBufferHandle::ResourceBufferHandle() {
 	m_Buffer = nullptr;
 	m_Size = 0;
 	m_Error = false;
+	m_Usage = kResourceSingleUse;
 }
 
-ResourceBufferHandle::ResourceBufferHandle(ResourceStream* stream, byte_t* buffer, size_t size, bool error) {
+ResourceBufferHandle::ResourceBufferHandle(ResourceStream* stream, byte_t* buffer, size_t size, bool error, ResourceUsage_t usage) {
 	ASSERT(stream != nullptr);
 	ASSERT(buffer != nullptr);
 	ASSERT(size > 0);
@@ -25,6 +26,7 @@ ResourceBufferHandle::ResourceBufferHandle(ResourceStream* stream, byte_t* buffe
 	m_Buffer = buffer;
 	m_Size = size;
 	m_Error = error;
+	m_Usage = usage;
 }
 
 ResourceBufferHandle::~ResourceBufferHandle() {
@@ -91,7 +93,7 @@ void ResourceStream::Update() {
 	CheckForCompletion();
 }
 
-bool ResourceStream::LoadDataFromFile(const char* name) {
+bool ResourceStream::LoadDataFromFile(const char* path, ResourceUsage_t usage) {
 	ASSERT(!m_File.IsOpen());
 	ASSERT(CanLoad());
 
@@ -103,7 +105,7 @@ bool ResourceStream::LoadDataFromFile(const char* name) {
 		return false;
 	}
 
-	bool openRes = m_File.Open(name, kPlatformFileRead);
+	bool openRes = m_File.Open(path, kPlatformFileRead);
 
 	if (!openRes) {
 		return false;
@@ -112,6 +114,8 @@ bool ResourceStream::LoadDataFromFile(const char* name) {
 	m_FileSysPtr->AsyncRead(m_File, 0, m_BackBuffer->data, kResourceLoadSizeMax);
 
 	m_BackBuffer->status = kResourceBufferProgress;
+
+	m_BackBuffer->usage = usage;
 
 	return true;
 }
@@ -133,7 +137,7 @@ ResourceBufferHandle ResourceStream::AcquireBufferHandle() {
         return handle;
 	}
     
-    ResourceBufferHandle handle(this, m_FrontBuffer->data, m_FrontBuffer->size, m_FrontBuffer->error);
+    ResourceBufferHandle handle(this, m_FrontBuffer->data, m_FrontBuffer->size, m_FrontBuffer->error, m_FrontBuffer->usage);
 
 	m_FrontBuffer->status = kResourceBufferProgress;
 
