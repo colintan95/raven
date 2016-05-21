@@ -14,22 +14,24 @@ ResourceBufferHandle::ResourceBufferHandle() {
 	m_Buffer = nullptr;
 	m_Size = 0;
 	m_Error = false;
-	m_Usage = kResourceSingleUse;
+    m_Type = kResourceTypeData;
 }
 
-ResourceBufferHandle::ResourceBufferHandle(ResourceStream* stream, byte_t* buffer, size_t size, bool error, ResourceUsage_t usage) {
+ResourceBufferHandle::ResourceBufferHandle(ResourceStream* stream, const char* path, byte_t* buffer, size_t size, bool error, ResourceType_t type) {
 	ASSERT(stream != nullptr);
 	ASSERT(buffer != nullptr);
 	ASSERT(size > 0);
 
 	m_StreamPtr = stream;
+	m_Path = path;
 	m_Buffer = buffer;
 	m_Size = size;
 	m_Error = error;
-	m_Usage = usage;
+	m_Type = type;
 }
 
 ResourceBufferHandle::~ResourceBufferHandle() {
+	m_Path = nullptr;
 	m_StreamPtr = nullptr;
 	m_Buffer = nullptr;
 	m_Size = 0;
@@ -93,7 +95,7 @@ void ResourceStream::Update() {
 	CheckForCompletion();
 }
 
-bool ResourceStream::LoadDataFromFile(const char* path, ResourceUsage_t usage) {
+bool ResourceStream::LoadDataFromFile(const char* path, ResourceType_t type) {
 	ASSERT(!m_File.IsOpen());
 	ASSERT(CanLoad());
 
@@ -115,7 +117,8 @@ bool ResourceStream::LoadDataFromFile(const char* path, ResourceUsage_t usage) {
 
 	m_BackBuffer->status = kResourceBufferProgress;
 
-	m_BackBuffer->usage = usage;
+	m_BackBuffer->type = type;
+	m_BackBuffer->path = path;
 
 	return true;
 }
@@ -137,7 +140,7 @@ ResourceBufferHandle ResourceStream::AcquireBufferHandle() {
         return handle;
 	}
     
-    ResourceBufferHandle handle(this, m_FrontBuffer->data, m_FrontBuffer->size, m_FrontBuffer->error, m_FrontBuffer->usage);
+    ResourceBufferHandle handle(this, m_FrontBuffer->path, m_FrontBuffer->data, m_FrontBuffer->size, m_FrontBuffer->error, m_FrontBuffer->type);
 
 	m_FrontBuffer->status = kResourceBufferProgress;
 

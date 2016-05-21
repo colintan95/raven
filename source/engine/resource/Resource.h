@@ -5,16 +5,16 @@
 
 typedef uint64_t ResourceId_t;
 
-// How the resource is used by the client; determines how the resource is 
-// stored
-enum ResourceUsage_t {
-	kResourceSingleUse, // Used only once then released
-	kResourceContextual, // Used for a certain period of the game
-	kResourcePermanent // Used for the entire game
+// Type of resource being loaded; determines post-load processing if needed
+enum ResourceType_t {
+	kResourceTypeData, // Generic data that does not need post-load
+	kResourceTypePng,
+	kResourceTypeJpeg
 };
 
 // Forward declarations
 class ResourceHandle;
+class ResourceManager;
 
 //--------------------------------------------------
 //
@@ -25,6 +25,7 @@ class ResourceHandle;
 //--------------------------------------------------
 class Resource {
 	friend class ResourceHandle;
+	friend class ResourceManager;
 
 public:
 	Resource();
@@ -44,6 +45,8 @@ private:
 
 private:
 	// Pointer to the data
+	//
+	// Data can point to nullptr though resource is valid; e.g. png resource
 	byte_t* m_Data;
 
 	// Counts the number of handles being used

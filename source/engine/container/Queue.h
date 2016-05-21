@@ -61,8 +61,6 @@ public:
 		return const_cast<T&>(GetFront());
 	}
 
-	int GetLength() const { return m_Capacity; }
-
 	bool IsFull() const { return (m_Head == (m_Tail + 1) % (m_Capacity + 1)); }
 	bool IsEmpty() const { return (m_Head == m_Tail); }
 

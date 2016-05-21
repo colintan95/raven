@@ -12,5 +12,6 @@ add_subdirectory(platform)
 add_subdirectory(render)
 add_subdirectory(resource)
 add_subdirectory(scripting)
+add_subdirectory(state)
 
 add_sources(GameEngine.cpp)

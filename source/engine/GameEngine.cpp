@@ -1,16 +1,5 @@
 #include "GameEngine.h"
 
-#include "resource/ResourceManager.h"
-#include "input/InputManager.h"
-#include "render/Renderer.h"
-#include "entity/Scene.h"
-
-#include "entity/Entity.h"
-#include "entity/Sprite.h"
-
-#include "resource/image/PngReader.h"
-
-#include <cstdio>
 
 GameEngine::GameEngine() {
 	m_Quit = false;
@@ -29,19 +18,29 @@ void GameEngine::Init() {
 
 	m_PlatformFileSys = new PlatformFileSystem();
 
-	m_Resource = new ResourceManager(m_PlatformFileSys);
+	m_TexRegistry = new TextureRegistry();
+	m_Resource = new ResourceManager(m_PlatformFileSys, m_TexRegistry);
 	m_Input = new InputManager(this, m_PlatformInput);
 	m_Render = new Renderer(m_PlatformWindow);
 
+	m_PhysWorld = new PhysWorld();
+	m_EntityManager = new EntityManager(m_PhysWorld);
 	m_Scene = new Scene(m_PlatformWindow);
+
+	m_StateMachine = new GameStateMachine();
 }
 
 void GameEngine::Shutdown() {
+	delete m_StateMachine;
+
 	delete m_Scene;
+	delete m_EntityManager;
+	delete m_PhysWorld;
 
 	delete m_Render;
 	delete m_Input;
 	delete m_Resource;
+	delete m_TexRegistry;
 
 	delete m_PlatformFileSys;
 	delete m_PlatformInput;
@@ -51,59 +50,17 @@ void GameEngine::Shutdown() {
 
 void GameEngine::MainLoop() {
 
-	FILE* pngFile = fopen("metalslug.png", "rb");
-
-	fseek(pngFile, 0, SEEK_END);
-	int pngFileSize = ftell(pngFile);
-	fseek(pngFile, 0, SEEK_SET);
-
-	byte_t* pngBuffer = new byte_t[pngFileSize];
-
-	fread((void*)pngBuffer, 1, pngFileSize, pngFile);
-
-	fclose(pngFile);
-
-
-	PngReader reader;
-
-	reader.InitReader(pngBuffer, pngFileSize);
-
-	ImageHeader header;
-	bool headerRead = reader.ReadHeader(&header);
-
-	ASSERT(headerRead);
-
-	size_t pngDataSize = header.size;
-
-	byte_t* pngData = new byte_t[pngDataSize];
-
-	bool dataRead = reader.ReadData(pngData);
-
-	ASSERT(dataRead);
-
-	delete[] pngBuffer;
-
-	Texture ballTexture;
-
-	ballTexture.CreateFromBuffer(kTextureColorRGBA, header.width, header.height, (const void*)pngData);
-	
-
-	SharedPtr<Sprite> ballSprite(new Sprite(&ballTexture, 1));
-
-	ballSprite->AddClip("idle", 5, 0, 30, 40, 1, 1, 1);
-	ballSprite->PlayClip("idle", true);
-
-	Entity* ballEntity = new Entity();
-	ballEntity->SetSprite(ballSprite);
-
-	m_Scene->AddEntity(ballEntity, 0);
-
 	while (!m_Quit) {
+		m_StateMachine->Update();
+
 		// Update the resource manager;
 		m_Resource->Update();
 
 		// Update input
 		m_Input->Update();
+
+		// Update physics
+		m_PhysWorld->Update();
 
 		// Update scene
 		m_Scene->Update();
@@ -120,10 +77,6 @@ void GameEngine::MainLoop() {
 
 		m_Render->PostRender();
 	}
-
-	delete ballEntity;
-
-	delete[] pngData;
 }
 
 void GameEngine::QuitGame() {

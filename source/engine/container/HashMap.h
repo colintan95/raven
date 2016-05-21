@@ -13,7 +13,7 @@
 // key can only correspond to ONE value. Use a HashMultimap if one key needs 
 // to contain multiple values
 //
-// An entry into the map contains of 1) Key and 2) Value. The key can be 
+// An entry into the map contains of 1) Key and 2) Value.
 //
 // There are two linked list that are internally maintained: 1) Map List and 2)
 // Collision List

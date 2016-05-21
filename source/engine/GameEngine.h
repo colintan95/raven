@@ -5,11 +5,16 @@
 
 #include "platform/platform_include.h"
 
+#include "render/TextureRegistry.h"
+#include "resource/ResourceManager.h"
+#include "input/InputManager.h"
+#include "render/Renderer.h"
+#include "physics/PhysWorld.h"
+#include "entity/EntityManager.h"
+#include "entity/Scene.h"
+#include "state/GameStateMachine.h"
+
 // Forward declarations
-class InputManager;
-class Renderer;
-class ResourceManager;
-class Scene;
 
 //--------------------------------------------------
 //
@@ -34,6 +39,14 @@ public:
 	// Quits the game
 	void QuitGame();
 
+	TextureRegistry* GetTextureRegistry() { return m_TexRegistry; }
+	ResourceManager* GetResourceManager() { return m_Resource; }
+	InputManager* GetInputManager() { return m_Input; }
+	PhysWorld* GetPhysWorld() { return m_PhysWorld; }
+	EntityManager* GetEntityManager() { return m_EntityManager; }
+	Scene* GetScene() { return m_Scene; }
+	GameStateMachine* GetStateMachine() { return m_StateMachine; }
+
 private:
 	PlatformApp* m_PlatformApp;
 	PlatformInput* m_PlatformInput;	
@@ -41,11 +54,16 @@ private:
 	PlatformFileSystem* m_PlatformFileSys;
 
 	// Engine subsystems
+	TextureRegistry* m_TexRegistry;
 	ResourceManager* m_Resource;
 	InputManager* m_Input;
 	Renderer* m_Render;
 
+	PhysWorld* m_PhysWorld;
+	EntityManager* m_EntityManager;
 	Scene* m_Scene;
+
+	GameStateMachine* m_StateMachine;
 
 	// Shutdown engine if true
 	bool m_Quit;

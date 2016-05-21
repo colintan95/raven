@@ -3,6 +3,7 @@
 
 #include "base_include.h"
 
+#include "math/Rect.h"
 #include "math/Vector.h"
 #include "render/QuadShader.h"
 
@@ -37,12 +38,35 @@ public:
 
 	// Render all entities with sprites
 	void Render();
+	
 
+	// Only add or remove entity that is not a child to another entity
+	// (ie m_Parent == nullptr)
 	void AddEntity(Entity* entity, int layerIndex);
+	void RemoveEntity(Entity* entity);
 
-	Vec3 WorldToViewCoords(const Vec3& pt);
+	// Moves the entity in front of its next sibling
+	void MoveForward(Entity* entity);
 
-	Vec3 ScreenToWorldCoords(const Vec3& pt);
+	// Moves the entity behind the previous sibling
+	void MoveBackward(Entity* entity);
+
+	// Moves the entity to the front of the layer
+	void MoveToFront(Entity* entity);
+
+	// Moves the entity to the back of the layer
+	void MoveToBack(Entity* entity);
+
+
+	void MoveCameraTo(const Vec2& vec);
+
+
+	Vec3 WorldToViewCoords(const Vec3& pt) const;
+
+	Vec3 ScreenToWorldCoords(const Vec3& pt) const;
+
+	// Returns the screen rect in world coordinates
+	Rect GetScreenRect() const;
 
 private:
 	// Converts view coordinates to Normalized Device Coordinates

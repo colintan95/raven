@@ -46,12 +46,13 @@ enum ResourceBufferStatus_t {
 //
 //--------------------------------------------------
 struct ResourceBuffer {
+	const char* path;
 	byte_t* data;
 	ResourceBufferStatus_t status;
 	size_t size; // size of data in the buffer
 	bool error; // True if an error occurred
 
-	ResourceUsage_t usage; // For use after loading
+	ResourceType_t type; // For use after loading
 };
 
 
@@ -72,12 +73,14 @@ public:
 	// Default constructor creates buffer with a null state
 	ResourceBufferHandle();
 
-	ResourceBufferHandle(ResourceStream* stream, byte_t* buffer, size_t size, bool error, ResourceUsage_t usage);
+	ResourceBufferHandle(ResourceStream* stream, const char* path, byte_t* buffer, size_t size, bool error, ResourceType_t type);
 
 	~ResourceBufferHandle();
 
+	const char* GetPath() { return m_Path; }
 	byte_t* GetData() { return m_Buffer; }
 	size_t GetSize() const { return m_Size; }
+	ResourceType_t GetType() const { return m_Type; }
 
 	// Returns true if valid and contains the data
 	bool IsValid() const { return m_Buffer != nullptr; }
@@ -85,6 +88,8 @@ public:
 	bool IsError() const { return m_Error; }
 
 private:
+	const char* m_Path;
+	
 	ResourceStream* m_StreamPtr;
 	byte_t* m_Buffer;
 
@@ -95,7 +100,7 @@ private:
 	size_t m_Size;
 
 	// Determines how the data will be stored after loading
-	ResourceUsage_t m_Usage;
+	ResourceType_t m_Type;
 };
 
 
@@ -124,7 +129,7 @@ public:
 
 
 	// Uses asynchronous io
-	bool LoadDataFromFile(const char* path, ResourceUsage_t usage);
+	bool LoadDataFromFile(const char* path, ResourceType_t type);
 
 
 	// Returns a handle to the result of the most recent io operation

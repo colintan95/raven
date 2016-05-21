@@ -1,5 +1,8 @@
 #include "Texture.h"
 
+// Counter for texture units
+static int unitCounter = 1;
+
 Texture::Texture() {
 	m_TextureId = 0;
 	m_TextureUnit = 0;
@@ -15,15 +18,16 @@ Texture::~Texture() {
 }
 
 void Texture::CreateFromBuffer(TextureColor_t colorType, int width, int height, const void* data) {
+
+	ASSERT(unitCounter < kTextureCountMax);
 	ASSERT(width > 0 && height > 0);
 
 	glGenTextures(1, &m_TextureId);
 
-	glBindTexture(GL_TEXTURE_2D, m_TextureId);
+	glActiveTexture(GL_TEXTURE0 + unitCounter);
+	m_TextureUnit = unitCounter;
 
-	// (TODO:) Allow texture units to vary
-	glActiveTexture(GL_TEXTURE0 + 1);
-	m_TextureUnit = 1;
+	glBindTexture(GL_TEXTURE_2D, m_TextureId);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -37,10 +41,12 @@ void Texture::CreateFromBuffer(TextureColor_t colorType, int width, int height, 
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 	}
 
-	glBindTexture(GL_TEXTURE_2D, 0);
+	glActiveTexture(GL_TEXTURE0);
 
 	m_ColorType = colorType;
 
 	m_Width = width;
 	m_Height = height;
+
+	++unitCounter;
 }

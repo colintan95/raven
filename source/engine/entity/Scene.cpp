@@ -39,7 +39,7 @@ void Scene::UpdateInternal(Entity* entity) {
 	}
 
 	// Updates the entity
-	entity->Update();
+	entity->EntityUpdate();
 
 	if (entity->HasSprite()) {
 		entity->GetSprite()->Update();
@@ -52,7 +52,7 @@ void Scene::UpdateInternal(Entity* entity) {
 }
 
 void Scene::Render() {
-	for (int i = 0; i < kSceneLayerMax; ++i) {
+	for (int i = kSceneLayerMax - 1; i >= 0; --i) {
 		if (m_Layers[i].head != nullptr) {
 			RenderInternal(m_Layers[i].head);
 		}
@@ -87,6 +87,18 @@ void Scene::RenderInternal(Entity* entity) {
 
 
 		Mat3 worldTransform = entity->GetWorldTransform();
+
+		if (sprite->GetFlipY()) {
+			worldTransform = worldTransform * Mat3(-1.0, 0.0, 0.0,
+													0.0, 1.0, 0.0,
+													0.0, 0.0, 1.0);
+		}
+
+		if (sprite->GetFlipX()) {
+			worldTransform = worldTransform * Mat3(1.0, 0.0, 0.0,
+													0.0, -1.0, 0.0,
+													0.0, 0.0, 1.0);
+		}
 
 		// World coordinates
 		Vec3 topLeftWorld = worldTransform * topLeftSprite;
@@ -128,6 +140,33 @@ void Scene::RenderInternal(Entity* entity) {
 							Vec2(topRightNDC.GetX(), topRightNDC.GetY()), 
 							Vec2(botRightNDC.GetX(), botRightNDC.GetY()), 
 							Vec2(botLeftNDC.GetX(), botLeftNDC.GetY()) );
+
+		// Sets texcoords; accounts for flipping of sprite
+		/*if (sprite->GetFlipX() && sprite->GetFlipY()) {
+			quad.SetTexcoord(	botRightTex,
+								botLeftTex,
+								topLeftTex,
+								topRightTex	);
+		}
+		else if (sprite->GetFlipX()) {
+			quad.SetTexcoord(	botLeftTex,
+								botRightTex,
+								topRightTex,
+								topLeftTex	);
+		}
+		else if (sprite->GetFlipY()) {
+			quad.SetTexcoord(	topRightTex,
+								topLeftTex,
+								botLeftTex,
+								botRightTex	);
+		}
+		else {
+			quad.SetTexcoord(	topLeftTex,
+								topRightTex,
+								botRightTex,
+								botLeftTex	);
+		}*/
+		
 		quad.SetTexcoord(	topLeftTex,
 							topRightTex,
 							botRightTex,
@@ -136,7 +175,7 @@ void Scene::RenderInternal(Entity* entity) {
 
 		m_SpriteShader.BindShader();
         
-		m_SpriteShader.SetUniformTexture(kShaderUniformTexture2D, *sprite->GetTexture());
+		m_SpriteShader.SetUniformTexture(kShaderUniformTexture2D, *(sprite->GetTexture()));
 		m_SpriteShader.SetRenderQuad(quad);
 
 		m_SpriteShader.Execute(4);
@@ -151,7 +190,11 @@ void Scene::RenderInternal(Entity* entity) {
 }
 
 void Scene::AddEntity(Entity* entity, int layerIndex) {
+	ASSERT(entity != nullptr);
 	ASSERT(layerIndex >= 0 && layerIndex < kSceneLayerMax);
+
+	// Only entities that are not a child of another
+	ASSERT(entity->m_Parent == nullptr);
 
 	SceneLayer* layer = &m_Layers[layerIndex];
 
@@ -173,9 +216,50 @@ void Scene::AddEntity(Entity* entity, int layerIndex) {
 		entity->m_Parent = nullptr;
 		entity->m_Sibling = nullptr;
 	}
+
+	entity->SetLayerIndex(layerIndex);
 }
 
-Vec3 Scene::WorldToViewCoords(const Vec3& pt) {
+void Scene::RemoveEntity(Entity* entity) {
+	ASSERT(entity != nullptr);
+
+	ASSERT(entity->m_LayerIndex != -1);
+
+	// Only entities that are not a child of another
+	ASSERT(entity->m_Parent == nullptr);
+
+	SceneLayer* layer = &m_Layers[entity->m_LayerIndex];
+
+	Entity** prevPtr = &layer->head;
+	Entity* prevIt = nullptr;
+	Entity* entityIt = layer->head;
+
+	while (entityIt != nullptr && entityIt != entity) {
+		prevPtr = &(entityIt->m_Sibling);
+		prevIt = entityIt;
+		entityIt = entityIt->m_Sibling;
+	}
+
+	ASSERT(entityIt != nullptr);
+
+	if (entityIt == entity) {
+		*prevPtr = entityIt->m_Sibling;
+
+		if (layer->tail == entityIt) {
+			layer->tail = prevIt;
+		}
+
+		entityIt->m_Sibling = nullptr;
+
+		entityIt->SetLayerIndex(-1);
+	}
+}
+
+void Scene::MoveCameraTo(const Vec2& pt) {
+	m_CameraPos = pt;
+}
+
+Vec3 Scene::WorldToViewCoords(const Vec3& pt) const {
 	ASSERT(pt.GetZ() == 1);
 
 	return Vec3(m_ViewScale * (pt.GetX() - m_CameraPos.GetX()),
@@ -183,12 +267,28 @@ Vec3 Scene::WorldToViewCoords(const Vec3& pt) {
 				1.0	);
 }
 
-Vec3 Scene::ScreenToWorldCoords(const Vec3& pt) {
+Vec3 Scene::ScreenToWorldCoords(const Vec3& pt) const {
 	ASSERT(pt.GetZ() == 1);
 
-	return Vec3(pt.GetX() / m_ViewScale + m_CameraPos.GetX(),
+	/*return Vec3(pt.GetX() / m_ViewScale + m_CameraPos.GetX(),
 				pt.GetY() / m_ViewScale + m_CameraPos.GetY(),
+				1.0 );*/
+
+	double width = m_WindowPtr->GetWindowWidth();
+	double height = m_WindowPtr->GetWindowHeight();
+
+	return Vec3(pt.GetX() / m_ViewScale + m_CameraPos.GetX() - width / 2.0,
+				pt.GetY() / m_ViewScale + m_CameraPos.GetY() - height / 2.0,
 				1.0 );
+}
+
+Rect Scene::GetScreenRect() const {
+	Vec3 topLeft = ScreenToWorldCoords(Vec3(0.0, 0.0, 1.0));
+	Vec3 botRight = ScreenToWorldCoords(Vec3(m_WindowPtr->GetWindowWidth(),
+										m_WindowPtr->GetWindowHeight(),
+										1.0));
+
+	return Rect(topLeft.GetX(), topLeft.GetY(), botRight.GetX() - topLeft.GetX(), botRight.GetY() - topLeft.GetY());
 }
 
 Vec3 Scene::ViewToNDC(const Vec3& pt) {

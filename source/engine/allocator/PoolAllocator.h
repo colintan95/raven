@@ -13,6 +13,8 @@
 // The size of type T must be as large as the size of a pointer because a free 
 // chunk will contain a pointer to the next chunk in the free list.
 //
+// IMPT: client MUST manually construct and destruct each object in the pool
+//
 //--------------------------------------------------
 template<typename T>
 class PoolAllocator {
@@ -40,6 +42,7 @@ public:
 		m_MaxAddress = 0;
 		m_FreeListHead = nullptr;
 		m_TopChunk = nullptr;
+
 		MEM_DELETE_ARR(m_Memory);
 
 		m_ChunkSize = 0;
@@ -74,8 +77,6 @@ public:
 		ASSERT((((size_t)ptr - (size_t)m_Memory) % m_ChunkSize) == 0);
 		ASSERT(ptr >= m_Memory);
 		ASSERT((size_t)ptr < m_MaxAddress);
-
-
 
 		*((T**)ptr) = m_FreeListHead; // Chunk will point to the previous list head 
 

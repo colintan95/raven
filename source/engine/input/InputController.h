@@ -3,8 +3,7 @@
 
 #include "base_include.h"
 
-// Forward declarations
-struct InputEvent;
+#include "InputEvent.h"
 
 //--------------------------------------------------
 //

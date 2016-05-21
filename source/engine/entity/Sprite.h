@@ -70,7 +70,13 @@ public:
 
 	void SetOrigin(Vec2 origin) { m_Origin = origin; }
 
+	void SetFlipX(bool flag) { m_FlipX = flag; }
+	void SetFlipY(bool flag) { m_FlipY = flag; }
+
 	Vec2 GetOrigin() const { return m_Origin; }
+
+	bool GetFlipX() const { return m_FlipX; }
+	bool GetFlipY() const { return m_FlipY; }
 
 	// Returns the texcoord frame in the texture
 	Rect GetFrame() const;
@@ -88,6 +94,10 @@ private:
 	//
 	// Offset from the top left corner
 	Vec2 m_Origin;
+
+	// If true, flip the sprite in the corresponding axis
+	bool m_FlipX;
+	bool m_FlipY;
 
 	// Variables for running sprite clip
 	SpriteClip* m_CurrentClip;

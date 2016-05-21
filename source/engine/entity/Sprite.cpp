@@ -7,6 +7,9 @@ Sprite::Sprite(Texture* texture, int clipCount): m_ClipTable(clipCount) {
 
 	m_Origin = Vec2(0.0, 0.0);
 
+	m_FlipX = false;
+	m_FlipY = false;
+
 	m_CurrentClip = nullptr;
 
 	m_CurrentFrame = 0;

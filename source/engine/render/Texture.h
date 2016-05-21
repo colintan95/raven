@@ -20,6 +20,9 @@ enum TextureColor_t {
 	kTextureColorRGBA
 };
 
+// Max number of textures in the game
+const int kTextureCountMax = 16;
+
 //--------------------------------------------------
 //
 // Texture

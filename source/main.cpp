@@ -1,14 +1,10 @@
-#include "GameEngine.h"
+#include "GameApp.h"
 
 int main(int argc, char* argv[]) {
 
-	GameEngine* engine = new GameEngine();
+	GameApp* app = new GameApp;
 
-	engine->Init();
-
-	engine->MainLoop();
-
-	engine->Shutdown();
+	app->Run();
 	
 	return 0;
 }
